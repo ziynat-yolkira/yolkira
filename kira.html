@@ -1,0 +1,23 @@
+<!DOCTYPE html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Yo'l kira</title>
+<body style="font-family:sans-serif;max-width:480px;margin:auto;padding:16px">
+<h2>Yo'l kira</h2>
+Avtobus narxi <input id="pb" type="number" value="1400" style="width:90px">
+Metro narxi <input id="pm" type="number" value="1400" style="width:90px"><br><br>
+<button onclick="add('bus')" style="width:48%;height:90px;font-size:20px;background:#e8890c;color:#fff;border:0;border-radius:12px">🚌 Avtobus</button>
+<button onclick="add('metro')" style="width:48%;height:90px;font-size:20px;background:#1b5fd1;color:#fff;border:0;border-radius:12px">🚇 Metro</button>
+<h3 id="td"></h3><div id="hs"></div><br>
+<button onclick="undo()" style="padding:12px">Oxirgisini o'chirish</button>
+<script>
+var R=JSON.parse(localStorage.getItem('r')||'[]');
+function D(){return new Date().toLocaleDateString('en-CA')}
+function add(t){R.push({d:D(),t:t,p:+document.getElementById(t=='bus'?'pb':'pm').value});save()}
+function undo(){R.pop();save()}
+function save(){localStorage.setItem('r',JSON.stringify(R));draw()}
+function S(l){return l.reduce(function(s,r){return s+r.p},0)}
+function draw(){
+var T=R.filter(function(r){return r.d==D()}),b=T.filter(function(r){return r.t=='bus'}).length;
+document.getElementById('td').innerHTML='Bugun: 🚌 '+b+' marta, 🚇 '+(T.length-b)+' marta<br>Jami: '+S(T)+" so'm";
+var g={};R.forEach(function(r){(g[r.d]=g[r.d]||[]).push(r)});
+document.getElementById('hs').innerHTML=Object.keys(g).sort().reverse().map(function(d){return d+' — '+g[d].length+' marta, '+S(g[d])+" so'm"}).join('<br>');}
+draw();
+</script>
